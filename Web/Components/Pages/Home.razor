@@ -1,0 +1,32 @@
+﻿@page "/"
+@using Logic
+
+<PageTitle>Home</PageTitle>
+
+<h1>Hello, world!</h1>
+<ul>
+    @foreach (Game game in lobby.Games)
+    {
+        <li>
+            @game.Name - Players: @game.NumberOfPlayers
+        </li>
+    }
+</ul>
+New Game Name : <input @bind=nameInput placeholder="type Game Name">
+<buttom @onclick=CreateGame> Create Game</buttom>
+@code {
+    string nameInput = "";
+    Lobby lobby = new Lobby();
+    void CreateGame()
+    {
+        Game newGame = new Game();
+        newGame.Name = nameInput;
+        newGame.NumberOfPlayers = 0;
+        nameInput = "";
+        lobby.Games.Add(newGame);
+    }
+    void Refresh()
+    {
+        InvokeAsync(StateHasChanged);
+    }
+}
