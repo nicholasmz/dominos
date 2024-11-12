@@ -1,32 +1,49 @@
-﻿@page "/"
+﻿@page "/home"
 @using Logic
+@inject GameSession GameSessionService
+@implements IDisposable
 
-<PageTitle>Home</PageTitle>
+<h3>Connect 4 Multiplayer</h3>
 
-<h1>Hello, world!</h1>
-<ul>
-    @foreach (Game game in lobby.Games)
+<div class="game-board">
+    @for (int row = 0; row < 6; row++)
     {
-        <li>
-            @game.Name - Players: @game.NumberOfPlayers
-        </li>
+        <div class="row">
+            @for (int col = 0; col < 7; col++)
+            {
+                <button class="cell" @onclick="() => MakeMove(col)">
+                    @(GameSessionService.CurrentGame.Board[row, col] == 0 ? "" : GameSessionService.CurrentGame.Board[row, col] == 1 ? "❄️" : "🔥")
+                </button>
+            }
+        </div>
     }
-</ul>
-New Game Name : <input @bind=nameInput placeholder="type Game Name">
-<buttom @onclick=CreateGame> Create Game</buttom>
+</div>
+
+@if (!string.IsNullOrEmpty(GameSessionService.CurrentGame.GameOverMessage))
+{
+    <div class="alert alert-success">@GameSessionService.CurrentGame.GameOverMessage</div>
+}
+
+<button @onclick="StartNewGame">Start New Game</button>
+
 @code {
-    string nameInput = "";
-    Lobby lobby = new Lobby();
-    void CreateGame()
+    protected override void OnInitialized()
     {
-        Game newGame = new Game();
-        newGame.Name = nameInput;
-        newGame.NumberOfPlayers = 0;
-        nameInput = "";
-        lobby.Games.Add(newGame);
+        GameSessionService.CurrentGame.OnChange += StateHasChanged;
     }
-    void Refresh()
+
+    private void StartNewGame()
     {
-        InvokeAsync(StateHasChanged);
+        GameSessionService.CurrentGame.Reset();
+    }
+
+    private void MakeMove(int column)
+    {
+        GameSessionService.MakeMove(column);
+    }
+
+    public void Dispose()
+    {
+        GameSessionService.CurrentGame.OnChange -= StateHasChanged;
     }
 }
