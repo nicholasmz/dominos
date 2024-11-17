@@ -1,5 +1,6 @@
 ﻿@page "/"
 @using Logic
+@inject NavigationManager Navigation
 
 <h3>Game Lobby</h3>
 
@@ -19,10 +20,6 @@
                 {
                     <input @bind="joinPlayerName" placeholder="Your name" />
                     <button @onclick="() => JoinGame(game.SessionId)">Join</button>
-                }
-                else
-                {
-                    <button @onclick="() => StartGame(game.SessionId)">Start Game</button>
                 }
             </li>
         }
@@ -45,12 +42,13 @@ else
 
     private void JoinGame(string gameId)
     {
-        GameService.JoinGame(gameId, joinPlayerName);
+        var session = GameService.JoinGame(gameId, joinPlayerName);
         joinPlayerName = string.Empty;
-    }
 
-    private void StartGame(string gameId)
-    {
-        GameService.StartGame(gameId);
+        if (session != null)
+        {
+            // Navigate to the game page after joining
+            Navigation.NavigateTo($"/game/{session.SessionId}");
+        }
     }
 }

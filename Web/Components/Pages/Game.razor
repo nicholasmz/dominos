@@ -1,21 +1,20 @@
 @page "/game/{GameId}"
 @using Logic
-@code {
-    [Parameter] public string GameId { get; set; } = string.Empty;
-    private GameSession? CurrentSession => GameService.LobbyGames.FirstOrDefault(g => g.SessionId == GameId);
+@inject NavigationManager Navigation
 
-    protected override void OnParametersSet()
-    {
-        if (CurrentSession == null)
-        {
-            // Navigate back to the lobby (replace with JavaScript or alert if you don't use NavigationManager)
-        }
-    }
-}
+<h3>Connect 4 Game</h3>
 
-@if (CurrentSession != null)
+@if (CurrentSession == null)
 {
-    <h3>Connect 4: @CurrentSession.Player1.Name vs. @CurrentSession.Player2?.Name</h3>
+    <div class="alert alert-danger">
+        <p>The session is invalid or has ended. Please return to the lobby.</p>
+        <a href="/lobby" class="btn btn-primary">Go to Lobby</a>
+    </div>
+}
+else
+{
+    <h4>Player 1: @CurrentSession.Player1.Name vs Player 2: @CurrentSession.Player2?.Name</h4>
+
     <div class="game-board">
         @for (int row = 0; row < 6; row++)
         {
@@ -23,7 +22,8 @@
                 @for (int col = 0; col < 7; col++)
                 {
                     <button class="cell" @onclick="() => MakeMove(col)">
-                        @(CurrentSession.CurrentGame.Board[row, col] == 0 ? "" : CurrentSession.CurrentGame.Board[row, col] == 1 ? "🔴" : "🔵")
+                        @(CurrentSession.CurrentGame.Board[row, col] == 0 ? "" :
+                          CurrentSession.CurrentGame.Board[row, col] == 1 ? "🔴" : "🔵")
                     </button>
                 }
             </div>
@@ -33,12 +33,19 @@
     @if (!string.IsNullOrEmpty(CurrentSession.CurrentGame.GameOverMessage))
     {
         <div class="alert alert-success">@CurrentSession.CurrentGame.GameOverMessage</div>
+        <a href="/lobby" class="btn btn-primary">Return to Lobby</a>
     }
 }
 
 @code {
+    [Parameter] public string GameId { get; set; } = string.Empty;
+    private GameSession? CurrentSession => GameService.LobbyGames.FirstOrDefault(g => g.SessionId == GameId);
+
     private void MakeMove(int column)
     {
-        CurrentSession?.MakeMove(column);
+        if (CurrentSession != null)
+        {
+            CurrentSession.MakeMove(column);
+        }
     }
 }
