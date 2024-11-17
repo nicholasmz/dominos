@@ -1,0 +1,44 @@
+@page "/game/{GameId}"
+@using Logic
+@code {
+    [Parameter] public string GameId { get; set; } = string.Empty;
+    private GameSession? CurrentSession => GameService.LobbyGames.FirstOrDefault(g => g.SessionId == GameId);
+
+    protected override void OnParametersSet()
+    {
+        if (CurrentSession == null)
+        {
+            // Navigate back to the lobby (replace with JavaScript or alert if you don't use NavigationManager)
+        }
+    }
+}
+
+@if (CurrentSession != null)
+{
+    <h3>Connect 4: @CurrentSession.Player1.Name vs. @CurrentSession.Player2?.Name</h3>
+    <div class="game-board">
+        @for (int row = 0; row < 6; row++)
+        {
+            <div class="row">
+                @for (int col = 0; col < 7; col++)
+                {
+                    <button class="cell" @onclick="() => MakeMove(col)">
+                        @(CurrentSession.CurrentGame.Board[row, col] == 0 ? "" : CurrentSession.CurrentGame.Board[row, col] == 1 ? "🔴" : "🔵")
+                    </button>
+                }
+            </div>
+        }
+    </div>
+
+    @if (!string.IsNullOrEmpty(CurrentSession.CurrentGame.GameOverMessage))
+    {
+        <div class="alert alert-success">@CurrentSession.CurrentGame.GameOverMessage</div>
+    }
+}
+
+@code {
+    private void MakeMove(int column)
+    {
+        CurrentSession?.MakeMove(column);
+    }
+}

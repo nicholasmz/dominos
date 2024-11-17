@@ -1,1 +1,56 @@
-﻿
+﻿@page "/"
+@using Logic
+
+<h3>Game Lobby</h3>
+
+<h4>Create a New Game</h4>
+<input @bind="hostPlayerName" placeholder="Enter your name" />
+<button @onclick="CreateGame">Create Game</button>
+
+<h4>Available Games</h4>
+@if (GameService.LobbyGames.Any())
+{
+    <ul>
+        @foreach (var game in GameService.LobbyGames)
+        {
+            <li>
+                Game ID: @game.SessionId - Host: @game.Player1.Name - Status: @(game.Player2 == null ? "Waiting for player..." : "Ready to start")
+                @if (game.Player2 == null)
+                {
+                    <input @bind="joinPlayerName" placeholder="Your name" />
+                    <button @onclick="() => JoinGame(game.SessionId)">Join</button>
+                }
+                else
+                {
+                    <button @onclick="() => StartGame(game.SessionId)">Start Game</button>
+                }
+            </li>
+        }
+    </ul>
+}
+else
+{
+    <p>No games available in the lobby.</p>
+}
+
+@code {
+    private string hostPlayerName = "";
+    private string joinPlayerName = "";
+
+    private void CreateGame()
+    {
+        GameService.CreateGame(hostPlayerName);
+        hostPlayerName = string.Empty;
+    }
+
+    private void JoinGame(string gameId)
+    {
+        GameService.JoinGame(gameId, joinPlayerName);
+        joinPlayerName = string.Empty;
+    }
+
+    private void StartGame(string gameId)
+    {
+        GameService.StartGame(gameId);
+    }
+}

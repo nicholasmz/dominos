@@ -30,16 +30,18 @@ namespace Logic
                 if (Board[row, column] == 0)
                 {
                     Board[row, column] = player;
+
                     if (CheckWinCondition(row, column, player))
                     {
                         GameOverMessage = $"Player {player} wins!";
                     }
+
                     NotifyStateChanged();
                     return true;
                 }
             }
 
-            return false; 
+            return false;
         }
 
         private bool CheckWinCondition(int row, int column, int player)
@@ -47,7 +49,7 @@ namespace Logic
             return CheckDirection(row, column, player, 1, 0) || 
                    CheckDirection(row, column, player, 0, 1) || 
                    CheckDirection(row, column, player, 1, 1) || 
-                   CheckDirection(row, column, player, 1, -1); 
+                   CheckDirection(row, column, player, 1, -1);
         }
 
         private bool CheckDirection(int row, int column, int player, int rowDelta, int colDelta)
