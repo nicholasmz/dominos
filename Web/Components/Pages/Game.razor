@@ -24,7 +24,8 @@
         <div class="column-buttons">
             @for (int col = 0; col < 7; col++) 
             {
-                <button class="column-button" @onclick="() => DropToken(col)">
+                int C = col;
+                <button class="column-button" @onclick="() => DropToken(C)">
                     Drop
                 </button>
             }
@@ -187,10 +188,24 @@
 </style>
 
 @code {
+    
     [Parameter] public string GameId { get; set; } = string.Empty;
 
     private GameSession? CurrentSession => GameService.GetGameSession(GameId);
-
+    
+    protected override void OnParametersSet(){
+        if(CurrentSession != null)
+        {
+            Action refresh = ()=>{
+                InvokeAsync(StateHasChanged);
+            };
+            CurrentSession.OnChange+= refresh;
+        }
+        else
+        {
+            Console.l
+        }
+    }
     private void DropToken(int column)
     {
         Console.WriteLine($"Attempting drop in column {column}");
@@ -203,15 +218,15 @@
 
         if (CurrentSession == null)
         {
-            Console.WriteLine("CurrentSession is null. Cannot make a move.");
+            Console.WriteLine("CurrentSession is null ,you cant make a move.");
             return;
-        }
+        }   
 
         bool success = CurrentSession.MakeMove(column);
         if (success)
         {
             Console.WriteLine($"Move successful in column {column}");
-            StateHasChanged(); // Refresh the UI
+            StateHasChanged(); 
         }
         else
         {
