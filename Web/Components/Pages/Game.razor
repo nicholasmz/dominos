@@ -2,50 +2,240 @@
 @using Logic
 @inject NavigationManager Navigation
 
-<h3>Connect 4 Game</h3>
+<div class="game-container">
+    <h1 class="game-title">Connect 4 Game</h1>
 
-@if (CurrentSession == null)
-{
-    <div class="alert alert-danger">
-        <p>The session is invalid or has ended. Please return to the lobby.</p>
-        <a href="/lobby" class="btn btn-primary">Go to Lobby</a>
-    </div>
-}
-else
-{
-    <h4>Player 1: @CurrentSession.Player1.Name vs Player 2: @CurrentSession.Player2?.Name</h4>
-
-    <div class="game-board">
-        @for (int row = 0; row < 6; row++)
-        {
-            <div class="row">
-                @for (int col = 0; col < 7; col++)
-                {
-                    <button class="cell" @onclick="() => MakeMove(col)">
-                        @(CurrentSession.CurrentGame.Board[row, col] == 0 ? "" :
-                          CurrentSession.CurrentGame.Board[row, col] == 1 ? "🔴" : "🔵")
-                    </button>
-                }
-            </div>
-        }
-    </div>
-
-    @if (!string.IsNullOrEmpty(CurrentSession.CurrentGame.GameOverMessage))
+    @if (CurrentSession == null)
     {
-        <div class="alert alert-success">@CurrentSession.CurrentGame.GameOverMessage</div>
-        <a href="/lobby" class="btn btn-primary">Return to Lobby</a>
+        <div class="alert alert-danger">
+            <p>The session is invalid or has ended. Please return to the lobby.</p>
+            <a href="/lobby" class="btn-primary">Return to Lobby</a>
+        </div>
     }
+    else
+    {
+        <div class="game-header">
+            <h2>Player 1: @CurrentSession.Player1.Name (🔴) vs Player 2: @CurrentSession.Player2?.Name (🔵)</h2>
+            <p class="current-turn">
+                @(CurrentSession.CurrentGame.IsGameOver ? CurrentSession.CurrentGame.GameOverMessage : $"Current Turn: {CurrentSession.CurrentPlayer.Name}")
+            </p>
+        </div>
+
+        <div class="column-buttons">
+            @for (int col = 0; col < 7; col++) 
+            {
+                <button class="column-button" @onclick="() => DropToken(col)">
+                    Drop
+                </button>
+            }
+        </div>
+
+
+        <div class="game-board">
+            @for (int row = 5; row >= 0; row--) 
+            {
+                <div class="row">
+                    @for (int col = 0; col < 7; col++) 
+                    {
+                        <div class="cell @(GetCellClass(CurrentSession.CurrentGame.Board[row, col]))">
+                            @(GetCellContent(CurrentSession.CurrentGame.Board[row, col]))
+                        </div>
+                    }
+                </div>
+            }
+        </div>
+
+        @if (!string.IsNullOrEmpty(CurrentSession.CurrentGame.GameOverMessage))
+        {
+            <div class="alert alert-success">@CurrentSession.CurrentGame.GameOverMessage</div>
+            <a href="/lobby" class="btn-primary">Return to Lobby</a>
+        }
+    }
+</div>
+
+<style>
+
+.game-container {
+    background: linear-gradient(to bottom right, #1c92d2, #f2fcfe);
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    color: #333;
+    font-family: Arial, sans-serif;
+    padding: 20px;
 }
+
+
+.game-title {
+    font-size: 48px;
+    margin-bottom: 20px;
+    text-shadow: 2px 2px 5px rgba(0, 0, 0, 0.2);
+}
+
+
+.column-buttons {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 20px;
+}
+
+.column-button {
+    width: 70px;
+    height: 40px;
+    font-size: 16px;
+    font-weight: bold;
+    background-color: #4CAF50;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    margin: 0 5px;
+    cursor: pointer;
+    transition: transform 0.2s, background-color 0.3s;
+}
+
+.column-button:hover {
+    background-color: #45a049;
+    transform: scale(1.1);
+}
+
+
+.game-board {
+    display: flex;
+    flex-direction: column-reverse;
+    align-items: center;
+    background-color: #3498db;
+    padding: 15px;
+    border-radius: 10px;
+    margin: 0 auto;
+    width: fit-content;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+}
+
+.row {
+    display: flex;
+}
+
+.cell {
+    width: 50px;
+    height: 50px;
+    border: 2px solid #2c3e50;
+    border-radius: 50%;
+    margin: 2px;
+    background-color: white;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 24px;
+    font-weight: bold;
+}
+
+.empty-cell {
+    background-color: white;
+}
+
+.player1-cell {
+    background-color: red;
+    color: white;
+}
+
+.player2-cell {
+    background-color: yellow;
+    color: black;
+}
+
+
+.alert {
+    padding: 15px;
+    border-radius: 5px;
+    margin-top: 20px;
+    width: 80%;
+    text-align: center;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+.alert-danger {
+    background-color: #f8d7da;
+    color: #721c24;
+    border: 1px solid #f5c6cb;
+}
+
+.alert-success {
+    background-color: #d4edda;
+    color: #155724;
+    border: 1px solid #c3e6cb;
+}
+
+
+.btn-primary {
+    display: inline-block;
+    background-color: #007bff;
+    color: white;
+    padding: 10px 20px;
+    font-size: 16px;
+    text-decoration: none;
+    border-radius: 5px;
+    margin-top: 10px;
+    transition: background-color 0.3s, transform 0.2s;
+}
+
+.btn-primary:hover {
+    background-color: #0056b3;
+    transform: scale(1.05);
+}
+</style>
 
 @code {
     [Parameter] public string GameId { get; set; } = string.Empty;
-    private GameSession? CurrentSession => GameService.LobbyGames.FirstOrDefault(g => g.SessionId == GameId);
 
-    private void MakeMove(int column)
+    private GameSession? CurrentSession => GameService.GetGameSession(GameId);
+
+    private void DropToken(int column)
     {
-        if (CurrentSession != null)
+        Console.WriteLine($"Attempting drop in column {column}");
+
+        if (column < 0 || column >= 7) 
         {
-            CurrentSession.MakeMove(column);
+            Console.WriteLine($"Invalid column index: {column}");
+            return;
         }
+
+        if (CurrentSession == null)
+        {
+            Console.WriteLine("CurrentSession is null. Cannot make a move.");
+            return;
+        }
+
+        bool success = CurrentSession.MakeMove(column);
+        if (success)
+        {
+            Console.WriteLine($"Move successful in column {column}");
+            StateHasChanged(); // Refresh the UI
+        }
+        else
+        {
+            Console.WriteLine($"Move failed in column {column}");
+        }
+    }
+
+    private string GetCellClass(int value)
+    {
+        return value switch
+        {
+            1 => "player1-cell",
+            2 => "player2-cell",
+            _ => "empty-cell"
+        };
+    }
+
+    private string GetCellContent(int value)
+    {
+        return value switch
+        {
+            1 => "🔴",
+            2 => "🔵",
+            _ => ""
+        };
     }
 }
