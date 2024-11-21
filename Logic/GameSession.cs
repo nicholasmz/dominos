@@ -10,6 +10,8 @@ namespace Logic
         public Player CurrentPlayer { get; private set; }
         public Game CurrentGame { get; }
 
+        public event Action? OnChange;
+
         public GameSession(Player player1, Player? player2)
         {
             SessionId = Guid.NewGuid().ToString();
@@ -30,8 +32,7 @@ namespace Logic
                 {
                     ToggleTurn();
                 }
-
-                GameService.NotifyGameStateChanged(SessionId);
+                NotifyStateChanged(); 
             }
 
             return moveSuccessful;
@@ -40,6 +41,11 @@ namespace Logic
         private void ToggleTurn()
         {
             CurrentPlayer = CurrentPlayer == Player1 ? Player2 : Player1!;
+        }
+
+        public void NotifyStateChanged()
+        {
+            OnChange?.Invoke(); 
         }
     }
 }

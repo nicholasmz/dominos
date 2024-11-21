@@ -5,7 +5,6 @@
 <div class="lobby-container">
     <h1 class="lobby-title">Game Lobby</h1>
 
-
     <div class="create-section">
         <h2>Create a New Game</h2>
         <div class="create-form">
@@ -44,146 +43,110 @@
 </div>
 
 <style>
+    .lobby-container {
+        background: linear-gradient(to bottom, #1f1010, #000000);
+        height: 100vh;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        color: #ffffff;
+    }
 
-.lobby-container {
-    background: linear-gradient(to bottom right, #b8bdc5, #2a5298);
-    height: 100vh;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    color: #fff;
-    font-family: Arial, sans-serif;
-    padding: 20px;
-}
+    .lobby-title {
+        font-size: 3rem;
+        color: #ff4d4d;
+        text-shadow: 0 0 10px #ff4d4d, 0 0 30px #990000;
+        margin-bottom: 30px;
+        text-align: center;
+    }
 
+    .create-section, .available-section {
+        background: rgba(255, 0, 0, 0.1);
+        border: 2px solid #ff4d4d;
+        border-radius: 15px;
+        padding: 20px;
+        box-shadow: 0 0 20px rgba(255, 0, 0, 0.8);
+        margin-bottom: 30px;
+        width: 90%;
+        max-width: 500px;
+    }
 
-.lobby-title {
-    font-size: 48px;
-    margin-bottom: 30px;
-    text-shadow: 2px 2px 5px rgba(0, 0, 0, 0.7);
-    text-align: center;
-}
+    .create-section h2, .available-section h2 {
+        font-size: 1.5rem;
+        color: #ff4d4d;
+        margin-bottom: 15px;
+    }
 
+    .input-name {
+        width: calc(100% - 20px);
+        padding: 10px;
+        border: 2px solid #ff4d4d;
+        border-radius: 5px;
+        font-size: 1rem;
+        color: #ffffff;
+        background: #1a1a1a;
+        box-shadow: inset 0 0 5px rgba(255, 0, 0, 0.5);
+    }
 
-.create-section {
-    background-color: rgba(255, 255, 255, 0.2);
-    padding: 20px;
-    border-radius: 10px;
-    text-align: center;
-    margin-bottom: 30px;
-    width: 100%;
-    max-width: 400px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
-}
+    .btn-create, .btn-join {
+        display: block;
+        width: 100%;
+        padding: 10px;
+        font-size: 1.2rem;
+        font-weight: bold;
+        color: #ffffff;
+        border: none;
+        border-radius: 5px;
+        background: linear-gradient(to right, #ff4d4d, #990000);
+        cursor: pointer;
+        margin-top: 10px;
+        box-shadow: 0 0 15px rgba(255, 0, 0, 0.7);
+        transition: transform 0.3s, background 0.3s;
+    }
 
-.create-section h2 {
-    font-size: 24px;
-    margin-bottom: 15px;
-}
+    .btn-create:hover, .btn-join:hover {
+        transform: scale(1.05);
+        background: linear-gradient(to right, #ff8080, #cc0000);
+    }
 
-.create-form {
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
-}
+    .game-list {
+        list-style: none;
+        padding: 0;
+        margin: 0;
+    }
 
-.input-name {
-    padding: 10px;
-    font-size: 16px;
-    border-radius: 5px;
-    border: none;
-    width: 100%;
-    box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.2);
-}
+    .game-item {
+        background: rgba(255, 0, 0, 0.2);
+        border: 2px solid #ff4d4d;
+        border-radius: 10px;
+        padding: 15px;
+        margin-bottom: 15px;
+        color: #ffffff;
+    }
 
-.btn-create {
-    background-color: #28a745;
-    color: white;
-    font-size: 18px;
-    padding: 10px;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-    transition: transform 0.2s, background-color 0.3s;
-}
+    .game-info p {
+        margin: 5px 0;
+        font-size: 1rem;
+    }
 
-.btn-create:hover {
-    background-color: #218838;
-    transform: scale(1.1);
-}
-
-
-.available-section {
-    background-color: rgba(255, 255, 255, 0.2);
-    padding: 20px;
-    border-radius: 10px;
-    text-align: center;
-    width: 100%;
-    max-width: 600px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
-}
-
-.available-section h2 {
-    font-size: 24px;
-    margin-bottom: 15px;
-}
-
-.game-list {
-    list-style: none;
-    padding: 0;
-}
-
-.game-item {
-    background-color: rgba(0, 0, 0, 0.3);
-    padding: 15px;
-    border-radius: 8px;
-    margin-bottom: 15px;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    text-align: left;
-}
-
-.game-info p {
-    margin: 5px 0;
-    font-size: 16px;
-}
-
-.no-games-message {
-    font-size: 18px;
-    color: #fff;
-    opacity: 0.8;
-}
-
-
-.btn-join {
-    background-color: #2991ff;
-    color: white;
-    font-size: 18px;
-    padding: 10px;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-    transition: transform 0.2s, background-color 0.3s;
-    margin-top: 10px;
-}
-
-.btn-join:hover {
-    background-color: #c7d3e0;
-    transform: scale(1.1);
-}
+    .no-games-message {
+        font-size: 1.2rem;
+        color: #ff4d4d;
+        text-align: center;
+        text-shadow: 0 0 5px #ff4d4d;
+    }
 </style>
 
 @code {
-    private string hostPlayerName = "";
-    private string joinPlayerName = "";
+    private string hostPlayerName = string.Empty;
+    private string joinPlayerName = string.Empty;
 
     private void CreateGame()
     {
         var session = GameService.CreateGame(hostPlayerName);
         hostPlayerName = string.Empty;
-
         Navigation.NavigateTo($"/game/{session.SessionId}");
     }
 
@@ -191,7 +154,6 @@
     {
         var session = GameService.JoinGame(gameId, joinPlayerName);
         joinPlayerName = string.Empty;
-
         if (session != null)
         {
             Navigation.NavigateTo($"/game/{session.SessionId}");
