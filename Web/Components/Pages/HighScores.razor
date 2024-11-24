@@ -1,0 +1,128 @@
+@page "/highscores"
+@using System.Linq
+@using Logic
+@inject NavigationManager Navigation
+
+
+<div class="highscores-container">
+    <h1 class="highscores-title">High Scores</h1>
+
+    @if (HighScoresList.Any())
+    {
+        <table class="highscores-table">
+            <thead>
+                <tr>
+                    <th>Rank</th>
+                    <th>Player</th>
+                    <th>Score</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var highScore in HighScoresList.Select((hs, index) => new { hs, index }))
+                {
+                    <tr>
+                        <td>@(highScore.index + 1)</td>
+                        <td>@highScore.hs.PlayerName</td>
+                        <td>@highScore.hs.Score</td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    }
+    else
+    {
+        <p class="no-highscores-message">No high scores available.</p>
+    }
+
+    <button @onclick="GoBack" class="btn-back">Back to Lobby</button>
+</div>
+
+<style>
+    .highscores-container {
+        background: linear-gradient(to bottom right, #1a1a1a, #000000);
+        color: #ffffff;
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        padding: 20px;
+        height: 100vh;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .highscores-title {
+        font-size: 3rem;
+        color: #ff4d4d;
+        text-shadow: 0 0 10px #ff4d4d, 0 0 30px #990000;
+        margin-bottom: 20px;
+    }
+
+    .highscores-table {
+        width: 60%;
+        border-collapse: collapse;
+        margin-bottom: 20px;
+        box-shadow: 0 0 15px rgba(255, 0, 0, 0.5);
+    }
+
+    .highscores-table th,
+    .highscores-table td {
+        border: 2px solid #ff4d4d;
+        padding: 10px;
+        text-align: center;
+    }
+
+    .highscores-table th {
+        background: #990000;
+        color: #ffffff;
+    }
+
+    .highscores-table td {
+        background: rgba(255, 0, 0, 0.1);
+        color: #ffffff;
+    }
+
+    .btn-back {
+        background: linear-gradient(to right, #ff4d4d, #990000);
+        color: #ffffff;
+        font-size: 1.2rem;
+        font-weight: bold;
+        padding: 10px 20px;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+        box-shadow: 0 0 15px rgba(255, 0, 0, 0.7);
+        transition: transform 0.3s, background 0.3s;
+    }
+
+    .btn-back:hover {
+        transform: scale(1.1);
+        background: linear-gradient(to right, #ff8080, #cc0000);
+    }
+
+    .no-highscores-message {
+        font-size: 1.5rem;
+        color: #ff4d4d;
+        margin-bottom: 20px;
+    }
+</style>
+
+@code {
+    
+    private List<HighScore> HighScoresList { get; set; } = new()
+    {
+        new HighScore { PlayerName = "Player1", Score = 150 },
+        new HighScore { PlayerName = "Player2", Score = 120 },
+        new HighScore { PlayerName = "Player3", Score = 100 },
+    };
+
+    private void GoBack()
+    {
+        Navigation.NavigateTo("/");
+    }
+
+    private class HighScore
+    {
+        public string PlayerName { get; set; } = string.Empty;
+        public int Score { get; set; }
+    }
+}
