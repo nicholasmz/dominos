@@ -42,18 +42,32 @@
     </div>
 
     <button class="btn-highscores" @onclick="GoToHighScores">View High Scores</button>
+    <div class="easter-egg" @onclick="ShowEasterEgg">
+        Easter Egg
+    </div>
+
+    @if (showEasterEgg)
+    {
+        <div class="easter-egg-message">
+            <button class="close-easter-egg" @onclick="CloseEasterEgg">X</button>
+            <span class="neon-s">S</span>
+            <p>Made by Nicholas Mena at Snow College on his pc :)
+            </p>
+        </div>
+    }
 </div>
 
 <style>
-    .lobby-container {
+     .lobby-container {
         background: linear-gradient(to bottom, #1f1010, #000000);
         height: 100vh;
         display: flex;
         flex-direction: column;
         align-items: center;
-        justify-content: center;
+        justify-content: flex-start;
         font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
         color: #ffffff;
+        padding: 20px;
     }
 
     .lobby-title {
@@ -79,6 +93,31 @@
         font-size: 1.5rem;
         color: #ff4d4d;
         margin-bottom: 15px;
+    }
+
+    .available-section {
+        max-height: 400px; 
+        overflow-y: auto; 
+    }
+
+    .game-list {
+        list-style: none;
+        padding: 0;
+        margin: 0;
+    }
+
+    .game-item {
+        background: rgba(255, 0, 0, 0.2);
+        border: 2px solid #ff4d4d;
+        border-radius: 10px;
+        padding: 15px;
+        margin-bottom: 15px;
+        color: #ffffff;
+    }
+
+    .game-info p {
+        margin: 5px 0;
+        font-size: 1rem;
     }
 
     .input-name {
@@ -113,26 +152,6 @@
         background: linear-gradient(to right, #ff8080, #cc0000);
     }
 
-    .game-list {
-        list-style: none;
-        padding: 0;
-        margin: 0;
-    }
-
-    .game-item {
-        background: rgba(255, 0, 0, 0.2);
-        border: 2px solid #ff4d4d;
-        border-radius: 10px;
-        padding: 15px;
-        margin-bottom: 15px;
-        color: #ffffff;
-    }
-
-    .game-info p {
-        margin: 5px 0;
-        font-size: 1rem;
-    }
-
     .no-games-message {
         font-size: 1.2rem;
         color: #ff4d4d;
@@ -158,11 +177,64 @@
         transform: scale(1.1);
         background: linear-gradient(to right, #ff8080, #cc0000);
     }
+    .easter-egg {
+        position: fixed;
+        bottom: 20px;
+        left: 20px;
+        font-size: 0.8rem;
+        color: rgba(255, 255, 255, 0.5); 
+        cursor: pointer;
+        transition: color 0.3s ease-in-out;
+    }
+
+    .easter-egg:hover {
+        color: rgba(255, 255, 255, 1); 
+    }
+
+    .easter-egg-message {
+    position: fixed;
+    bottom: 120px; 
+    left: 20px; 
+    background: rgba(0, 0, 0, 0.8);
+    padding: 10px;
+    border-radius: 5px;
+    text-align: left; 
+    box-shadow: 0 0 10px rgba(255, 0, 0, 0.7);
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start; 
+    gap: 10px;
+    z-index: 1000; 
+}
+
+    .close-easter-egg {
+        position: absolute;
+        top: 5px;
+        right: 5px;
+        background: transparent;
+        border: none;
+        font-size: 1.2rem;
+        color: white;
+        cursor: pointer;
+        font-weight: bold;
+    }
+
+    .close-easter-egg:hover {
+        color: #ff4d4d;
+    }
+
+    .neon-s {
+        font-size: 2rem;
+        font-weight: bold;
+        color: #ff4d4d;
+        text-shadow: 0 0 5px #ff4d4d, 0 0 10px #ff0000, 0 0 20px #ff0000;
+    }
 </style>
 
 @code {
     private string hostPlayerName = string.Empty;
     private string joinPlayerName = string.Empty;
+    private bool showEasterEgg = false;
 
     private void CreateGame()
     {
@@ -184,5 +256,15 @@
     private void GoToHighScores()
     {
         Navigation.NavigateTo("/highscores");
+    }
+
+    private void ShowEasterEgg()
+    {
+        showEasterEgg = true;
+    }
+
+    private void CloseEasterEgg()
+    {
+        showEasterEgg = false;
     }
 }

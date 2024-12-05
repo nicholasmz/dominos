@@ -28,14 +28,24 @@ namespace Logic
 
             if (moveSuccessful)
             {
-                if (!CurrentGame.IsGameOver)
+                if (CurrentGame.IsGameOver)
+                {
+                    RegisterWin(playerNumber);
+                }
+                else
                 {
                     ToggleTurn();
                 }
-                NotifyStateChanged(); 
+                NotifyStateChanged();
             }
 
             return moveSuccessful;
+        }
+
+        private void RegisterWin(int playerNumber)
+        {
+            var winningPlayer = playerNumber == 1 ? Player1 : Player2!;
+            GameService.RegisterWin(winningPlayer);
         }
 
         private void ToggleTurn()
@@ -45,7 +55,7 @@ namespace Logic
 
         public void NotifyStateChanged()
         {
-            OnChange?.Invoke(); 
+            OnChange?.Invoke();
         }
     }
 }

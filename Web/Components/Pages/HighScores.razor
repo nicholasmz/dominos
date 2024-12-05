@@ -3,65 +3,76 @@
 @using Logic
 @inject NavigationManager Navigation
 
+<div class="highscores-lobby-container">
+    <h1 class="highscores-lobby-title">High Scores</h1>
 
-<div class="highscores-container">
-    <h1 class="highscores-title">High Scores</h1>
-
-    @if (HighScoresList.Any())
-    {
-        <table class="highscores-table">
-            <thead>
-                <tr>
-                    <th>Rank</th>
-                    <th>Player</th>
-                    <th>Score</th>
-                </tr>
-            </thead>
-            <tbody>
-                @foreach (var highScore in HighScoresList.Select((hs, index) => new { hs, index }))
-                {
+    <div class="highscores-section">
+        @if (GameService.HighScores.Any())
+        {
+            <table class="highscores-table">
+                <thead>
                     <tr>
-                        <td>@(highScore.index + 1)</td>
-                        <td>@highScore.hs.PlayerName</td>
-                        <td>@highScore.hs.Score</td>
+                        <th>Rank</th>
+                        <th>Player</th>
+                        <th>Wins</th>
                     </tr>
-                }
-            </tbody>
-        </table>
-    }
-    else
-    {
-        <p class="no-highscores-message">No high scores available.</p>
-    }
+                </thead>
+                <tbody>
+                    @foreach (var highScore in GameService.HighScores.Select((hs, index) => new { hs, index }))
+                    {
+                        <tr>
+                            <td>@(highScore.index + 1)</td>
+                            <td>@highScore.hs.PlayerName</td>
+                            <td>@highScore.hs.Score</td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        }
+        else
+        {
+            <p class="no-highscores-message">No high scores available.</p>
+        }
+    </div>
 
-    <button @onclick="GoBack" class="btn-back">Back to Lobby</button>
+    <button @onclick="GoBack" class="btn-view-highscores">Back to Lobby</button>
 </div>
 
 <style>
-    .highscores-container {
-        background: linear-gradient(to bottom right, #1a1a1a, #000000);
-        color: #ffffff;
-        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-        padding: 20px;
-        height: 100vh;
+    .highscores-lobby-container {
         display: flex;
         flex-direction: column;
         align-items: center;
         justify-content: center;
+        padding: 20px;
+        background: linear-gradient(to bottom right, #1a1a1a, #000000);
+        color: #ffffff;
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        min-height: 100vh;
+        text-align: center;
     }
 
-    .highscores-title {
+    .highscores-lobby-title {
         font-size: 3rem;
         color: #ff4d4d;
         text-shadow: 0 0 10px #ff4d4d, 0 0 30px #990000;
         margin-bottom: 20px;
     }
 
+    .highscores-section {
+        width: 80%;
+        max-width: 800px;
+        border: 2px solid #ff4d4d;
+        border-radius: 10px;
+        padding: 20px;
+        background: rgba(255, 0, 0, 0.1);
+        box-shadow: 0 0 15px rgba(255, 0, 0, 0.5);
+    }
+
     .highscores-table {
-        width: 60%;
+        width: 100%;
         border-collapse: collapse;
         margin-bottom: 20px;
-        box-shadow: 0 0 15px rgba(255, 0, 0, 0.5);
     }
 
     .highscores-table th,
@@ -81,7 +92,7 @@
         color: #ffffff;
     }
 
-    .btn-back {
+    .btn-view-highscores {
         background: linear-gradient(to right, #ff4d4d, #990000);
         color: #ffffff;
         font-size: 1.2rem;
@@ -94,7 +105,7 @@
         transition: transform 0.3s, background 0.3s;
     }
 
-    .btn-back:hover {
+    .btn-view-highscores:hover {
         transform: scale(1.1);
         background: linear-gradient(to right, #ff8080, #cc0000);
     }
@@ -102,27 +113,13 @@
     .no-highscores-message {
         font-size: 1.5rem;
         color: #ff4d4d;
-        margin-bottom: 20px;
+        margin-top: 20px;
     }
 </style>
 
 @code {
-    
-    private List<HighScore> HighScoresList { get; set; } = new()
-    {
-        new HighScore { PlayerName = "Player1", Score = 150 },
-        new HighScore { PlayerName = "Player2", Score = 120 },
-        new HighScore { PlayerName = "Player3", Score = 100 },
-    };
-
     private void GoBack()
     {
         Navigation.NavigateTo("/");
-    }
-
-    private class HighScore
-    {
-        public string PlayerName { get; set; } = string.Empty;
-        public int Score { get; set; }
     }
 }
